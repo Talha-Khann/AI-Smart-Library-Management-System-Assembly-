@@ -342,9 +342,8 @@ sp1      BYTE " ",0
 
 .code
 
-; ============================================================
 ; ZeroBuffer  EDI=start, ECX=count
-; ============================================================
+
 ZeroBuffer PROC
     push eax
     push ecx
@@ -363,9 +362,8 @@ zb_dn:
     ret
 ZeroBuffer ENDP
 
-; ============================================================
 ; StrCopyN  ESI=src, EDI=dst, ECX=maxbytes
-; ============================================================
+
 StrCopyN PROC
     push eax
     push ecx
@@ -392,9 +390,8 @@ scn_dn:
     ret
 StrCopyN ENDP
 
-; ============================================================
-; StrCmpEqual  ESI=s1, EDI=s2  -> EAX=1 if equal, 0 if not
-; ============================================================
+; StrCmpEqual  
+
 StrCmpEqual PROC
     push esi
     push edi
@@ -421,9 +418,8 @@ sce_dn:
     ret
 StrCmpEqual ENDP
 
-; ============================================================
 ; ToLower AL -> AL
-; ============================================================
+
 ToLower PROC
     cmp  al, 'A'
     jb   tl_dn
@@ -434,16 +430,15 @@ tl_dn:
     ret
 ToLower ENDP
 
-; ============================================================
-; StrContainsCI  ESI=haystack, EDI=needle -> EAX=1/0
-; ============================================================
+; StrContainsCI  
+
 StrContainsCI PROC
     push esi
     push edi
     push ebx
     push ecx
 
-    mov  ebx, esi          ; save haystack start
+    mov  ebx, esi          
 scci_outer:
     mov  al, [esi]
     cmp  al, 0
@@ -455,7 +450,7 @@ scci_outer:
 scci_inner:
     mov  cl, [edi]
     cmp  cl, 0
-    je   scci_match        ; needle exhausted = match
+    je   scci_match        
 
     mov  al, [esi]
     cmp  al, 0
@@ -494,23 +489,21 @@ scci_dn:
     ret
 StrContainsCI ENDP
 
-; ============================================================
 ; GetBookQty  EBX=book_index -> EAX=qty
-; ============================================================
+
 GetBookQty PROC
     push edx
     mov  eax, ebx
     mov  edx, 4
-    mul  edx               ; eax = ebx*4
+    mul  edx               
     add  eax, OFFSET bkQT
     mov  eax, DWORD PTR [eax]
     pop  edx
     ret
 GetBookQty ENDP
 
-; ============================================================
 ; SetBookQty  EBX=book_index, ECX=qty
-; ============================================================
+
 SetBookQty PROC
     push eax
     push edx
@@ -524,9 +517,8 @@ SetBookQty PROC
     ret
 SetBookQty ENDP
 
-; ============================================================
-; FindBookByID  EDX=id_ptr -> EAX=index or -1
-; ============================================================
+; FindBookByID 
+
 FindBookByID PROC
     push esi
     push edi
@@ -568,9 +560,8 @@ fbid_dn:
     ret
 FindBookByID ENDP
 
-; ============================================================
-; PrintFixed  EDX=str, ECX=field_width  (pads with spaces)
-; ============================================================
+; PrintFixed  
+
 PrintFixed PROC
     push eax
     push ebx
@@ -612,9 +603,8 @@ pf_dn:
     ret
 PrintFixed ENDP
 
-; ============================================================
 ; PrintBookRow  EBX=book_index
-; ============================================================
+
 PrintBookRow PROC
     push eax
     push ecx
@@ -648,7 +638,7 @@ PrintBookRow PROC
     call PrintFixed
 
     ; Qty
-    call GetBookQty        ; eax = qty (ebx = index)
+    call GetBookQty        
     push eax
     call WriteDec
     pop  eax
@@ -676,9 +666,8 @@ pbr_nl:
     ret
 PrintBookRow ENDP
 
-; ============================================================
 ; ShowLoading
-; ============================================================
+
 ShowLoading PROC
     mov  edx, OFFSET s_load
     call WriteString
@@ -695,9 +684,8 @@ sl_lp:
     ret
 ShowLoading ENDP
 
-; ============================================================
 ; DoLogin
-; ============================================================
+
 DoLogin PROC
     mov  ecx, 3
 dol_try:
@@ -764,9 +752,8 @@ dol_out:
     invoke ExitProcess, 0
 DoLogin ENDP
 
-; ============================================================
 ; AddBook
-; ============================================================
+
 AddBook PROC
     call Clrscr
 
@@ -851,7 +838,7 @@ ab_qok:
 
     ; store Qty
     mov  ecx, tQT
-    call SetBookQty        ; ebx=index, ecx=qty
+    call SetBookQty        
 
     inc  bkCnt
     mov  edx, OFFSET s_added
@@ -859,9 +846,8 @@ ab_qok:
     ret
 AddBook ENDP
 
-; ============================================================
 ; ViewAllBooks
-; ============================================================
+
 ViewAllBooks PROC
     call Clrscr
     cmp  bkCnt, 0
@@ -889,9 +875,8 @@ vab_dn:
     ret
 ViewAllBooks ENDP
 
-; ============================================================
 ; SearchBook
-; ============================================================
+
 SearchBook PROC
     call Clrscr
     mov  edx, OFFSET s_smenu
@@ -993,9 +978,8 @@ sb_print:
     ret
 SearchBook ENDP
 
-; ============================================================
-; CheckEmpty  EDX=str_ptr -> EAX=1 if empty, 0 if not
-; ============================================================
+; CheckEmpty
+
 CheckEmpty PROC
     push esi
     mov  esi, edx
@@ -1011,9 +995,8 @@ ce_dn:
     ret
 CheckEmpty ENDP
 
-; ============================================================
 ; PressEnterPrompt  - shows "Press Enter..." and waits
-; ============================================================
+
 PressEnterPrompt PROC
     mov  edx, OFFSET s_press
     call WriteString
@@ -1024,10 +1007,8 @@ PressEnterPrompt PROC
     ret
 PressEnterPrompt ENDP
 
-; ============================================================
-; PrintIssueRecord  EBX=issue_index
-; prints a single formatted issue record
-; ============================================================
+; PrintIssueRecord  
+
 PrintIssueRecord PROC
     push eax
     push ecx
@@ -1125,8 +1106,10 @@ PrintIssueRecord PROC
     mov  edx, OFFSET s_lissued
     call WriteString
     call Crlf
-    ; show overdue note (simple: always show if issued - user enters overdue date manually)
+
+    ; show overdue note 
     ; We print the overdue warning as a reminder to check dates
+
     mov  edx, OFFSET s_overdue
     call WriteString
     jmp  pir_dn
@@ -1146,10 +1129,9 @@ pir_dn:
     ret
 PrintIssueRecord ENDP
 
-; ============================================================
 ; IssueBook
 ; Asks user for all details manually, stores them, shows slip
-; ============================================================
+
 IssueBook PROC
     call Clrscr
 
@@ -1436,9 +1418,8 @@ ib_ddt_ok:
     ret
 IssueBook ENDP
 
-; ============================================================
-; ReturnBook  (enhanced)
-; ============================================================
+; ReturnBook 
+
 ReturnBook PROC
     call Clrscr
 
@@ -1590,9 +1571,8 @@ rb_no_fine:
     ret
 ReturnBook ENDP
 
-; ============================================================
 ; DeleteBook
-; ============================================================
+
 DeleteBook PROC
     call Clrscr
     mov  edx, OFFSET s_bid
@@ -1719,9 +1699,8 @@ db_done_shift:
     ret
 DeleteBook ENDP
 
-; ============================================================
 ; UpdateBook
-; ============================================================
+
 UpdateBook PROC
     call Clrscr
     mov  edx, OFFSET s_bid
@@ -1810,9 +1789,8 @@ ub_skip:
     ret
 UpdateBook ENDP
 
-; ============================================================
 ; ResetAll
-; ============================================================
+
 ResetAll PROC
     call Clrscr
     mov  edx, OFFSET s_wrn1
@@ -1869,9 +1847,8 @@ ra_yes:
     ret
 ResetAll ENDP
 
-; ============================================================
 ; LibraryStats
-; ============================================================
+
 LibraryStats PROC
     call Clrscr
     mov  edx, OFFSET s_shdr
@@ -1938,10 +1915,12 @@ ls_dn:
     ret
 LibraryStats ENDP
 
-; ============================================================
+;****************************************************
 ; AIChatBot  - 3 AI Assistants: TALHA, AHSAN, HUZAIFA
+; Group Members Name
 ; Keyword-based chatbot loop with intelligent routing
-; ============================================================
+;***************************************************
+
 AIChatBot PROC
     call Clrscr
     mov  edx, OFFSET s_cbhdr
@@ -2132,7 +2111,8 @@ cb_chk_delete:
     call WriteString
     jmp  cb_loop
 
-    ; --- UPDATE  (TALHA) ---
+    ;  UPDATE  (TALHA)
+
 cb_chk_update:
     mov  esi, OFFSET cb_input
     mov  edi, OFFSET cb_update
@@ -2146,7 +2126,8 @@ cb_chk_update:
     call WriteString
     jmp  cb_loop
 
-    ; --- BOOK generic  (TALHA tips) ---
+    ;  BOOK generic  (TALHA tips) 
+
 cb_chk_book:
     mov  esi, OFFSET cb_input
     mov  edi, OFFSET cb_book
@@ -2160,7 +2141,8 @@ cb_chk_book:
     call WriteString
     jmp  cb_loop
 
-    ; --- UNKNOWN input ---
+    ;  UNKNOWN input 
+
 cb_unknown:
     mov  edx, OFFSET s_talha
     call WriteString
@@ -2177,9 +2159,9 @@ cb_done:
     ret
 AIChatBot ENDP
 
-; ============================================================
+
 ; MAIN
-; ============================================================
+
 main PROC
     call DoLogin
 
