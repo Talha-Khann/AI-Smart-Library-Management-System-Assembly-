@@ -7,7 +7,8 @@
 
 INCLUDE Irvine32.inc
 
-; ---------- sizes ------------------------------------------
+; sizes
+
 MAX_BOOKS    EQU 50
 MAX_ISSUES   EQU 100
 BID_SZ       EQU 12
@@ -23,7 +24,8 @@ FINE_RATE    EQU 10
 
 .data
 
-; ===== LOGIN =====
+; LOGIN
+
 s_title  BYTE "========================================",0dh,0ah
          BYTE "  AI SMART LIBRARY MANAGEMENT SYSTEM   ",0dh,0ah
          BYTE "========================================",0dh,0ah,0
@@ -41,7 +43,8 @@ c_pass   BYTE "1234",0
 b_user   BYTE 20 DUP(0)
 b_pass   BYTE 20 DUP(0)
 
-; ===== MENU =====
+; MENU 
+
 s_menu   BYTE 0dh,0ah
          BYTE "========================================",0dh,0ah
          BYTE "              MAIN MENU                 ",0dh,0ah
@@ -62,7 +65,8 @@ s_menu   BYTE 0dh,0ah
 
 s_inv    BYTE "Invalid choice!",0dh,0ah,0
 
-; ===== COMMON PROMPTS =====
+; COMMON PROMPTS
+
 s_bid    BYTE "Enter Book ID   : ",0
 s_bnm    BYTE "Enter Book Name : ",0
 s_bau    BYTE "Enter Author    : ",0
@@ -81,17 +85,20 @@ s_nfnd   BYTE "Book Not Found.",0dh,0ah,0
 s_deld   BYTE "Book Deleted Successfully!",0dh,0ah,0
 s_upd    BYTE "Book Updated Successfully!",0dh,0ah,0
 
-; ===== TABLE HEADER =====
+; TABLE HEADEr
+
 s_thdr   BYTE 0dh,0ah
          BYTE "ID          Name                    Author              Qty  Status",0dh,0ah
          BYTE "----------  ----------------------  ------------------  ---  ----------",0dh,0ah,0
 s_avail  BYTE "Available",0
 s_oos    BYTE "OutOfStock",0
 
-; ===== SEARCH =====
+;  SEARCH 
+
 s_smenu  BYTE 0dh,0ah,"Search by: 1.Name  2.ID  3.Author : ",0
 
-; ===== ISSUE =====
+;  ISSUE 
+
 s_isshdr BYTE 0dh,0ah
          BYTE "====================================",0dh,0ah
          BYTE "         ISSUE BOOK MODULE          ",0dh,0ah
